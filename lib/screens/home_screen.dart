@@ -52,33 +52,20 @@ class _HomeScreenState extends State<HomeScreen> {
   // }
 
   // creating an updateUI method here to get the specific values from the api
-  dynamic updateUI() async {
+
+  Future updateUI() async {
     APIData apiData = APIData();
-    try {
-      var newData = await apiData.data();
-
-      // print(newData);
-      // imageUrl = newData['data'][0]['images'][0]['image'];
-
+    var response = await apiData.data();
+    if (response != null) {
+      var product = response['data'][0];
       setState(() {
-        if (newData == null) {
-          imageUrl = 'error';
-        } else {
-          // try {
-          imageUrl = newData['data'][0]['images'][0]['image'];
-          image = newData['data'][0]['name'];
-          // } catch (e) {
-          //   print(e);
-          // }
-        }
+        imageUrl = product['images'][0]['image'];
+        image = product['name'];
       });
-    } catch (e) {
-      print(e);
+    } else {
+      print('Response was null');
+      imageUrl = 'error';
     }
-
-    // return newData;
-
-    // image = newData['data']['store_id'];
   }
 
   // void update() async {
@@ -110,16 +97,46 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // print(imageUrl);
+    print(imageUrl);
 
     print(image);
     return Scaffold(
       body: Center(
         child: Container(
           // child: gettingData ? Text('Wait') : Text(imageUrl),
-          child: image != null ? Text(image) : Text('error'),
+          child: image != null ? Text(image) : CircularProgressIndicator(),
         ),
       ),
     );
   }
 }
+
+//  dynamic updateUI() async {
+//     APIData apiData = APIData();
+//     try {
+//       var newData = await apiData.data();
+
+//       // print(newData);
+//       // imageUrl = newData['data'][0]['images'][0]['image'];
+
+//       setState(() {
+//         if (newData == null) {
+//           imageUrl = 'error';
+//         } else {
+//           // try {
+//           imageUrl = newData['data'][0]['images'][0]['image'];
+//           image = newData['data'][0]['name'];
+//           // } catch (e) {
+//           //   print(e);
+//           // }
+//         }
+//       });
+//       // print('successfull');
+//     } catch (e) {
+//       print('The error is: $e');
+//     }
+
+//     // return newData;
+
+//     // image = newData['data']['store_id'];
+//   }
