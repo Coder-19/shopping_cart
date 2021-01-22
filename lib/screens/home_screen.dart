@@ -32,9 +32,9 @@ class _HomeScreenState extends State<HomeScreen> {
           imageUrl = 'error';
         } else {
           imageUrl = newData['data'][0]['images'][0]['image'];
-          print(newData['data'][0]['images'][0]['image']);
+          print('Inside initState() method: ${newData['data'][0]['images'][0]['image']}');
           image = newData['data'][0]['name'];
-          print(newData['data'][0]['name']);
+          print('InsideinitState() method: ${newData['data'][0]['name']}');
         }
       });
     } catch (e) {
