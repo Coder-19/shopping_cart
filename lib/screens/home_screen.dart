@@ -1,11 +1,13 @@
-import 'dart:convert';
+// import 'dart:convert';
 import 'package:flutter/material.dart';
 // import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:http/http.dart' as http;
+// import 'package:http/http.dart' as http;
 
 // import 'package:shopping_cart/screens/second_screen.dart';
 import 'package:shopping_cart/services/api_data.dart';
-import 'package:shopping_cart/services/networking.dart';
+// import 'package:shopping_cart/services/networking.dart';
+// import 'package:shopping_cart/services/products.dart';
+// import 'package:shopping_cart/services/networking.dart';
 // import 'package:shopping_cart/services/navigation_drawer.dart';
 // import 'package:shopping_cart/services/networking.dart';
 
@@ -19,63 +21,38 @@ class _HomeScreenState extends State<HomeScreen> {
 
   String imageUrl;
 
-  int numberOfQuantity = 0;
-
-  bool gettingData = false;
-
-  // Future getDetails() async {
-  //   http.Response response = await http.get(
-  //     'https://mini.ilmtechnosolutions.com/api/v1/products/desc',
-  //   );
-
-  //   // storing the data in a variable
-  //   // var data = jsonDecode(response.body);
-
-  //   if (response.statusCode == 200) {
-  //     var data = jsonDecode(response.body);
-  //     print('The current data is: $data');
-
-  //     return data;
-  //   } else {
-  //     print('error');
-  //     return 'error';
-  //   }
-  // }
-
-  // Future<dynamic> data() async {
-  //   // creating an instance of Networking class here
-  //   Networking networking = Networking();
-  //   var apiData = await networking.getDetails();
-
-  //   print('The data is: $apiData');
-  //   return apiData;
-  // }
-
   // creating an updateUI method here to get the specific values from the api
-
   Future updateUI() async {
     APIData apiData = APIData();
-    var response = await apiData.data();
-    if (response != null) {
-      var product = response['data'][0];
+    try {
+      var newData = await apiData.data();
+
       setState(() {
-        imageUrl = product['images'][0]['image'];
-        image = product['name'];
+        if (newData == null) {
+          imageUrl = 'error';
+        } else {
+          imageUrl = newData['data'][0]['images'][0]['image'];
+          print(newData['data'][0]['images'][0]['image']);
+          image = newData['data'][0]['name'];
+          print(newData['data'][0]['name']);
+        }
       });
-    } else {
-      print('Response was null');
-      imageUrl = 'error';
+    } catch (e) {
+      print('The error is: $e');
     }
   }
 
-  // void update() async {
-  //   var api =  await updateUI();
+  // Future<void> update() async {
+  //   Products products = Products();
+
+  //   var data = await products.updateUI();
 
   //   setState(() {
-  //     if (api == null) {
+  //     if (data == null) {
   //       imageUrl = 'error';
   //     } else {
-  //       imageUrl = api['data'][0]['images'][0]['image'];
+  //       imageUrl = data['data'][0]['images'][0]['image'];
+  //       image = data['data'][0]['name'];
   //     }
   //   });
   // }
@@ -84,59 +61,61 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
 
-    // getDetails();
-
     updateUI();
 
+    // print(imageUrl);
+
+    // print(image);
     // update();
-
-    // print(apiData.getDetails());
-
-    // data();
   }
 
   @override
   Widget build(BuildContext context) {
-    print(imageUrl);
-
-    print(image);
+    print('Inside of buid function: $imageUrl');
+    print('Inside of the build function: $image');
     return Scaffold(
       body: Center(
         child: Container(
+          // child: Text(imageUrl),
           // child: gettingData ? Text('Wait') : Text(imageUrl),
           child: image != null ? Text(image) : CircularProgressIndicator(),
+
+          // child: FutureBuilder(
+          //   future: updateUI(),
+          //   builder: (context, snapshot) {
+          //     var item;
+          //     if (snapshot.hasData) {
+          //       item = image;
+          //     }
+          //     // return Text(item);
+          //   },
+          // ),
         ),
       ),
     );
   }
 }
 
-//  dynamic updateUI() async {
-//     APIData apiData = APIData();
-//     try {
-//       var newData = await apiData.data();
-
-//       // print(newData);
-//       // imageUrl = newData['data'][0]['images'][0]['image'];
-
+// void updateUI() async {
+//   APIData apiData = APIData();
+//   // try {
+//     var response = await apiData.data();
+//     // print(response);
+//     if (response != null) {
+//       // print('inside if else block');
+//       // var product = response['data'][0];
 //       setState(() {
-//         if (newData == null) {
-//           imageUrl = 'error';
-//         } else {
-//           // try {
-//           imageUrl = newData['data'][0]['images'][0]['image'];
-//           image = newData['data'][0]['name'];
-//           // } catch (e) {
-//           //   print(e);
-//           // }
-//         }
+//         // imageUrl = product['images'][0]['image'];
+//         // image = product['name'];
+
 //       });
-//       // print('successfull');
-//     } catch (e) {
-//       print('The error is: $e');
-//     }
-
-//     // return newData;
-
-//     // image = newData['data']['store_id'];
+//       // print('ending of if else block');
+//     } else {
+//       // print('starting of else block');
+//       print('Response was null');
+//       imageUrl = 'error';
+//     // }
+//   // } catch (e) {
+//     // print('error $e');
 //   }
+// }
